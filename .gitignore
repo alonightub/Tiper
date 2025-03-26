@@ -1,0 +1,7 @@
+.vscode/
+dist/
+node_modules/
+
+secrets/jerusalem
+secrets/umm-al-fahm
+test.js
