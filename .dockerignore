@@ -1,10 +1,7 @@
-.vscode/
-dist/
-node_modules/
-
+node_modules
+dist
+.vscode
 secrets/jerusalem
 secrets/umm-al-fahm
 test.js
-
-app.log
-*.pem
+*.log
