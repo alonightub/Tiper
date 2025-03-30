@@ -99,6 +99,7 @@ class TikTokBrowserScraper {
     private async initFirefoxBrowser(): Promise<BrowserContext> {
         const browser = await firefox.launch({
             headless: !CONFIG.OPEN_BROWSER,
+            args: ['--no-sandbox', '--disable-setuid-sandbox'],
             firefoxUserPrefs: {
                 'media.volume_scale': "0", // mute
             },
