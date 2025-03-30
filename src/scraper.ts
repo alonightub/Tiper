@@ -1,6 +1,10 @@
 import { firefox, BrowserContext, Page, Response } from 'playwright';
+import stealth from 'playwright-extra-plugin-stealth';
 import { CONFIG, logger } from './config';
 import { Video } from './dataHandler';
+
+// @ts-ignore
+firefox.use(stealth());
 
 class TikTokBrowserScraper {
     private static readonly TIKTOK_BASE_URL: string = 'https://www.tiktok.com';
@@ -110,6 +114,7 @@ class TikTokBrowserScraper {
             storageState: this.storageStatePath,
             userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
         });
+        this.log(`Browser context created successfully with proxy user: ${this.proxyCreds.username}`);
 
         this.page = await this.ctx.newPage();
         this.page.setDefaultTimeout(0);
