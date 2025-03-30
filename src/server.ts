@@ -19,7 +19,11 @@ app.get('/health', (req: Request, res: Response) => {
 
 app.get('/scrape', async (req: Request, res: Response) => {
     const { videosNum, sentinalUser, proxyRegion } = req.query as { videosNum: string; sentinalUser: string, proxyRegion: string };
-    const scraperManager = new ScraperManager(Number(videosNum), sentinalUser, proxyRegion);
+    const scraperManager = new ScraperManager(
+        videosNum ? Number(videosNum) : undefined, 
+        sentinalUser, 
+        proxyRegion
+    );
 
     try {
         await scraperManager.startScraping();
