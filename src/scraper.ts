@@ -78,7 +78,7 @@ class TikTokBrowserScraper {
             this.log("Clicking scroll element...");
             await this.page.click(TikTokBrowserScraper.SCROLLING_SELECTOR_PATH);
             this.log("Waiting for timeout after scroll...");
-            await this.page.waitForTimeout(Math.random() * 2000);
+            await this.page.waitForTimeout(Math.random() * 1000);
         } catch (error) {
             this.log('Error during scrolling:', 'error', error);
             await this.page.waitForTimeout(Math.random() * 3000);
@@ -136,12 +136,12 @@ class TikTokBrowserScraper {
         const profileLink = await this.page?.locator('a[data-e2e="nav-profile"]');
         if (profileLink) {
             const href = await profileLink.getAttribute('href');
-            if (href && href.includes('florin')) {
+            if (href && href.includes(this.sentinalUser)) {
                 this.log(`Profile link found with href: ${href}`);
                 return true;
             }
         }
-        this.log('Profile link not found or does not contain "florin"');
+        this.log(`Profile link not found or does not contain ${this.sentinalUser}`);
         return false;
     }
 }
