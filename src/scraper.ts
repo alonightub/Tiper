@@ -1,6 +1,7 @@
 import { chromium, firefox, BrowserContext, Page, Response } from 'playwright';
 import { CONFIG, logger } from './config';
 import { Video } from './dataHandler';
+const fs = require('fs');
 
 class TikTokBrowserScraper {
     private static readonly TIKTOK_BASE_URL: string = 'https://www.tiktok.com';
@@ -104,7 +105,14 @@ class TikTokBrowserScraper {
                 'media.volume_scale': "0", // mute
             },
         });
-
+        this.log(`Proxy details: ${JSON.stringify(CONFIG.PROXY_DETAILS)}`);
+        this.log(`Storage state path: ${this.storageStatePath}`);
+        if (fs.existsSync(this.storageStatePath)) {
+            const storageStateContent = fs.readFileSync(this.storageStatePath, 'utf-8');
+            this.log(`Storage state file content: ${storageStateContent}`);
+        } else {
+            this.log(`Storage state file does not exist at path: ${this.storageStatePath}`, 'error');
+        }
         this.ctx = await browser.newContext({
             proxy: CONFIG.PROXY_DETAILS,
             storageState: this.storageStatePath,
