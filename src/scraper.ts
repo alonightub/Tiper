@@ -52,17 +52,15 @@ class TikTokBrowserScraper {
         await this.page?.goto(TikTokBrowserScraper.TIKTOK_BASE_URL + TikTokBrowserScraper.API_PATHS.foryou, {
             waitUntil: 'commit'
         });
-        await this.page?.waitForTimeout(5000);
+        await this.page?.waitForTimeout(3000);
         await this.checkProfileLink();
 
         this.log('>> Starting to scroll, max scrolls:' + CONFIG.MAX_SCROLLS.toString());
         for (let j = 0; j < CONFIG.MAX_SCROLLS && this.videosToFetch > this.newVideos.length; j++) {
-            // if ((j + 1) % 5 === 0) {
-            this.log(`${j + 1} videos scrolled`);
-            // }
+            if ((j + 1) % 5 === 0) {
+                this.log(`${j + 1} videos scrolled`);
+            }
             await this.scrollPage();
-            await this.checkProfileLink();
-
         }
         this.log(`>> Finished scrolling: ${this.newVideos.length} new videos were fetched`);
 
@@ -73,11 +71,8 @@ class TikTokBrowserScraper {
     private async scrollPage(): Promise<void> {
         if (!this.page) return;
         try {
-            this.log("Waiting for scroll element...");
             await this.page.waitForSelector(TikTokBrowserScraper.SCROLLING_SELECTOR_PATH);
-            this.log("Clicking scroll element...");
             await this.page.click(TikTokBrowserScraper.SCROLLING_SELECTOR_PATH);
-            this.log("Waiting for timeout after scroll...");
             await this.page.waitForTimeout(Math.random() * 1000);
         } catch (error) {
             this.log('Error during scrolling:', 'error', error);
@@ -135,13 +130,15 @@ class TikTokBrowserScraper {
     private async checkProfileLink(): Promise<boolean> {
         const profileLink = await this.page?.locator('a[data-e2e="nav-profile"]');
         if (profileLink) {
-            const href = await profileLink.getAttribute('href');
-            if (href && href.includes(this.sentinalUser)) {
-                this.log(`Profile link found with href: ${href}`);
+            let href: string | null = null;
+            try {
+                href = await profileLink.getAttribute('href');
+                this.log(`User is connected successfully with the username: ${href}`);
                 return true;
+            } catch (error) {
+                this.log(`Profile link not found or does not contain ${this.sentinalUser}`, 'error', error);
             }
         }
-        this.log(`Profile link not found or does not contain ${this.sentinalUser}`);
         return false;
     }
 }
