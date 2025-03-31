@@ -57,9 +57,9 @@ class TikTokBrowserScraper {
 
         this.log('>> Starting to scroll, max scrolls:' + CONFIG.MAX_SCROLLS.toString());
         for (let j = 0; j < CONFIG.MAX_SCROLLS && this.videosToFetch > this.newVideos.length; j++) {
-            if ((j + 1) % 5 === 0) {
-                this.log(`${j + 1} videos scrolled`);
-            }
+            // if ((j + 1) % 5 === 0) {
+            this.log(`${j + 1} videos scrolled`);
+            // }
             await this.scrollPage();
         }
         this.log(`>> Finished scrolling: ${this.newVideos.length} new videos were fetched`);
@@ -72,10 +72,10 @@ class TikTokBrowserScraper {
         if (!this.page) return;
         try {
             await this.page.click(TikTokBrowserScraper.SCROLLING_SELECTOR_PATH);
-            await this.page.waitForTimeout(Math.random() * 1000);
+            await this.page.waitForTimeout(Math.random() * 2000);
         } catch (error) {
             this.log('Error during scrolling:', 'error', error);
-            await this.page.waitForTimeout(Math.random() * 2000);
+            await this.page.waitForTimeout(Math.random() * 3000);
         }
     }
 
