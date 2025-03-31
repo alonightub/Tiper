@@ -1,4 +1,4 @@
-import { firefox, BrowserContext, Page, Response } from 'playwright';
+import { chromium, firefox, BrowserContext, Page, Response } from 'playwright';
 import { CONFIG, logger } from './config';
 import { Video } from './dataHandler';
 
@@ -97,7 +97,7 @@ class TikTokBrowserScraper {
     }
 
     private async initFirefoxBrowser(): Promise<BrowserContext> {
-        const browser = await firefox.launch({
+        const browser = await chromium.launch({
             headless: !CONFIG.OPEN_BROWSER,
             args: ['--no-sandbox', '--disable-setuid-sandbox'],
             firefoxUserPrefs: {
