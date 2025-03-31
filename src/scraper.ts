@@ -1,7 +1,6 @@
 import { chromium, firefox, BrowserContext, Page, Response } from 'playwright';
 import { CONFIG, logger } from './config';
 import { Video } from './dataHandler';
-const fs = require('fs');
 
 class TikTokBrowserScraper {
     private static readonly TIKTOK_BASE_URL: string = 'https://www.tiktok.com';
@@ -10,7 +9,7 @@ class TikTokBrowserScraper {
         foryouItemsList: '/api/recommend/item_list',
     };
     private static readonly SCROLLING_SELECTOR_PATH: string = 'path[d="m24 27.76 13.17-13.17a1 1 0 0 1 1.42 0l2.82 2.82a1 1 0 0 1 0 1.42L25.06 35.18a1.5 1.5 0 0 1-2.12 0L6.59 18.83a1 1 0 0 1 0-1.42L9.4 14.6a1 1 0 0 1 1.42 0L24 27.76Z"]';
-    
+
     private newVideos: Video[] = [];
     private ctx: BrowserContext | null = null;
     private page: Page | null = null;
@@ -41,7 +40,7 @@ class TikTokBrowserScraper {
         if (!this.ctx || !this.page) {
             await this.initFirefoxBrowser();
         }
-        
+
         this.page?.on("response", async (response: Response) => {
             if (response.url().includes(TikTokBrowserScraper.API_PATHS.foryouItemsList)) {
                 const fetchedVideos = await this.parseItemsResponse(response);
@@ -50,11 +49,11 @@ class TikTokBrowserScraper {
                 this.newVideos.push(...fetchedVideos);
             }
         });
-
         await this.page?.goto(TikTokBrowserScraper.TIKTOK_BASE_URL + TikTokBrowserScraper.API_PATHS.foryou, {
             waitUntil: 'commit'
         });
-        await this.page?.waitForTimeout(3000);
+        await this.page?.waitForTimeout(5000);
+        await this.checkProfileLink();
 
         this.log('>> Starting to scroll, max scrolls:' + CONFIG.MAX_SCROLLS.toString());
         for (let j = 0; j < CONFIG.MAX_SCROLLS && this.videosToFetch > this.newVideos.length; j++) {
@@ -62,6 +61,8 @@ class TikTokBrowserScraper {
             this.log(`${j + 1} videos scrolled`);
             // }
             await this.scrollPage();
+            await this.checkProfileLink();
+
         }
         this.log(`>> Finished scrolling: ${this.newVideos.length} new videos were fetched`);
 
@@ -109,14 +110,6 @@ class TikTokBrowserScraper {
                 'media.volume_scale': "0", // mute
             },
         });
-        this.log(`Proxy details: ${JSON.stringify(CONFIG.PROXY_DETAILS)}`);
-        this.log(`Storage state path: ${this.storageStatePath}`);
-        if (fs.existsSync(this.storageStatePath)) {
-            const storageStateContent = fs.readFileSync(this.storageStatePath, 'utf-8');
-            this.log(`Storage state file content: ${storageStateContent}`);
-        } else {
-            this.log(`Storage state file does not exist at path: ${this.storageStatePath}`, 'error');
-        }
         this.ctx = await browser.newContext({
             proxy: CONFIG.PROXY_DETAILS,
             storageState: this.storageStatePath,
@@ -137,6 +130,19 @@ class TikTokBrowserScraper {
         });
 
         await this.ctx?.close();
+    }
+
+    private async checkProfileLink(): Promise<boolean> {
+        const profileLink = await this.page?.locator('a[data-e2e="nav-profile"]');
+        if (profileLink) {
+            const href = await profileLink.getAttribute('href');
+            if (href && href.includes('florin')) {
+                this.log(`Profile link found with href: ${href}`);
+                return true;
+            }
+        }
+        this.log('Profile link not found or does not contain "florin"');
+        return false;
     }
 }
 
