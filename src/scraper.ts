@@ -72,7 +72,11 @@ class TikTokBrowserScraper {
     private async scrollPage(): Promise<void> {
         if (!this.page) return;
         try {
+            this.log("Waiting for scroll element...");
+            await this.page.waitForSelector(TikTokBrowserScraper.SCROLLING_SELECTOR_PATH);
+            this.log("Clicking scroll element...");
             await this.page.click(TikTokBrowserScraper.SCROLLING_SELECTOR_PATH);
+            this.log("Waiting for timeout after scroll...");
             await this.page.waitForTimeout(Math.random() * 2000);
         } catch (error) {
             this.log('Error during scrolling:', 'error', error);
