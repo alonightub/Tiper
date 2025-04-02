@@ -3,8 +3,8 @@ import * as winston from 'winston';
 
 export const CONFIG = {
     OPEN_BROWSER: false,
-    CONCURRENT_BROWSERS_NUM: 2,
-    VIDEOS_TO_FETCH: 40,
+    CONCURRENT_BROWSERS_NUM: 4,
+    VIDEOS_TO_FETCH: 10,
     MAX_SCROLLS: 200,
     DATA_DIR: './data',
     SECRETS_DIR: './secrets',

@@ -15,12 +15,16 @@ class ScraperManager {
         this.proxyRegionCode = proxyRegionCode;
     }
 
-    public async startScraping(): Promise<void> {
-        logger.info(`>>> Starting to fetch videos with the following parameters: videosNum: ${this.videosNum}, sentinalUser: ${this.sentinalUser}, proxyRegionCode: ${this.proxyRegionCode}, concurrentBrowsers: ${CONFIG.CONCURRENT_BROWSERS_NUM}`);
+    public async startScraping(concBrowsersNum: number = CONFIG.CONCURRENT_BROWSERS_NUM): Promise<void> {
+        logger.info(`>>> Starting to fetch videos with the following parameters: videosNum: ${this.videosNum}, sentinalUser: ${this.sentinalUser}, proxyRegionCode: ${this.proxyRegionCode}, concurrentBrowsers: ${concBrowsersNum}`);
         const startTime = Date.now();
+        if (concBrowsersNum > 6) {
+            logger.error('The number of concurrent browsers must not exceed 6. Setting to 5.');
+            concBrowsersNum = 5;
+        }
 
         try {
-            const videos = await this.scrapeVideos();
+            const videos = await this.scrapeVideos(concBrowsersNum);
             const uniqueVideos = this.getUniqueVideos(videos);
 
             logger.info(`>>> Finished fetching videos: ${uniqueVideos.length} unique videos were fetched`);
@@ -32,10 +36,10 @@ class ScraperManager {
         }
     }
 
-    private async scrapeVideos(): Promise<any[]> {
+    private async scrapeVideos(concBrowsersNum: number): Promise<any[]> {
         const maxVideosPerBrowser = this.videosNum / CONFIG.CONCURRENT_BROWSERS_NUM;
         const results = await Promise.all(
-            Array(CONFIG.CONCURRENT_BROWSERS_NUM).fill(null).map(async (_, index) => {
+            Array(concBrowsersNum).fill(null).map(async (_, index) => {
                 if ((index + 1) % 3 === 0) {
                     await new Promise(resolve => setTimeout(resolve, 1500));
                 }

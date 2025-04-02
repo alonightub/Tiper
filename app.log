@@ -62,3 +62,76 @@ Call log:
 2025-03-26T13:17:33.065Z [info]: >>> Finished fetching videos: 43 unique videos were fetched
 2025-03-26T13:17:44.488Z [info]: Data saved to S3: florin_2025-03-26T13-17-23-988Z.json
 2025-03-26T13:17:45.880Z [info]: Time taken: 0.36471666666666663 minutes
+2025-03-31T06:49:09.797Z [info]: >>> Server is up & listening on port 3000
+2025-03-31T06:49:16.047Z [info]: Received GET request for /scrape?videosNum=40&sentinalUser=florin&proxyRegion=IL with query params: {"videosNum":"40","sentinalUser":"florin","proxyRegion":"IL"}
+2025-03-31T06:49:16.051Z [info]: >>> Starting to fetch videos with the following parameters: videosNum: 40, sentinalUser: florin, proxyRegionCode: IL, concurrentBrowsers: 2
+2025-03-31T06:49:17.110Z [info]: [Scraper 1] Browser context created successfully with proxy user: customer-pariente_LdU3N-cc-IL
+2025-03-31T06:49:17.262Z [info]: [Scraper 0] Browser context created successfully with proxy user: customer-pariente_LdU3N-cc-IL
+2025-03-31T06:49:21.883Z [info]: [Scraper 0] >> Starting to scroll, max scrolls:200
+2025-03-31T06:49:23.418Z [info]: [Scraper 0] New request detected: contains 5 videos
+2025-03-31T06:49:23.479Z [info]: [Scraper 1] >> Starting to scroll, max scrolls:200
+2025-03-31T06:49:33.391Z [info]: [Scraper 0] 5 videos scrolled
+2025-03-31T06:49:39.533Z [info]: [Scraper 0] New request detected: contains 10 videos
+2025-03-31T06:49:42.649Z [info]: [Scraper 0] 10 videos scrolled
+2025-03-31T06:49:50.498Z [info]: [Scraper 0] 15 videos scrolled
+2025-03-31T06:49:58.552Z [info]: [Scraper 0] 20 videos scrolled
+2025-03-31T06:50:01.587Z [info]: [Scraper 0] New request detected: contains 9 videos
+2025-03-31T06:50:01.907Z [info]: [Scraper 0] >> Finished scrolling: 24 new videos were fetched
+2025-03-31T06:50:21.848Z [error]: [Scraper 1] Error during scrolling: page.click: Target page, context or browser has been closed
+Call log:
+[2m  - waiting for locator('path[d="m24 27.76 13.17-13.17a1 1 0 0 1 1.42 0l2.82 2.82a1 1 0 0 1 0 1.42L25.06 35.18a1.5 1.5 0 0 1-2.12 0L6.59 18.83a1 1 0 0 1 0-1.42L9.4 14.6a1 1 0 0 1 1.42 0L24 27.76Z"]')[22m
+
+2025-03-31T06:50:21.849Z [error]: An error occurred while fetching videos page.waitForTimeout: Target page, context or browser has been closed
+2025-03-31T06:50:58.837Z [info]: >>> Server is up & listening on port 3000
+2025-03-31T06:51:03.109Z [info]: Received GET request for /scrape?videosNum=40&sentinalUser=florin&proxyRegion=IL with query params: {"videosNum":"40","sentinalUser":"florin","proxyRegion":"IL"}
+2025-03-31T06:51:03.113Z [info]: >>> Starting to fetch videos with the following parameters: videosNum: 40, sentinalUser: florin, proxyRegionCode: IL, concurrentBrowsers: 2
+2025-03-31T06:51:03.938Z [info]: [Scraper 1] Browser context created successfully with proxy user: customer-pariente_LdU3N-cc-IL
+2025-03-31T06:51:04.246Z [info]: [Scraper 0] Browser context created successfully with proxy user: customer-pariente_LdU3N-cc-IL
+2025-03-31T06:51:08.709Z [info]: [Scraper 1] >> Starting to scroll, max scrolls:200
+2025-03-31T06:51:08.734Z [info]: [Scraper 0] >> Starting to scroll, max scrolls:200
+2025-03-31T06:51:09.812Z [info]: [Scraper 1] New request detected: contains 6 videos
+2025-03-31T06:51:10.219Z [info]: [Scraper 0] New request detected: contains 6 videos
+2025-03-31T06:51:20.602Z [info]: [Scraper 0] 5 videos scrolled
+2025-03-31T06:51:22.793Z [info]: [Scraper 1] 5 videos scrolled
+2025-03-31T06:51:26.579Z [info]: [Scraper 0] New request detected: contains 10 videos
+2025-03-31T06:51:27.830Z [info]: [Scraper 1] New request detected: contains 9 videos
+2025-03-31T06:51:28.921Z [info]: [Scraper 0] 10 videos scrolled
+2025-03-31T06:51:31.094Z [info]: [Scraper 1] 10 videos scrolled
+2025-03-31T06:51:34.914Z [info]: [Scraper 0] 15 videos scrolled
+2025-03-31T06:51:37.779Z [info]: [Scraper 1] 15 videos scrolled
+2025-03-31T06:51:43.209Z [info]: [Scraper 0] 20 videos scrolled
+2025-03-31T06:51:45.995Z [info]: [Scraper 1] 20 videos scrolled
+2025-03-31T06:51:47.222Z [info]: [Scraper 0] New request detected: contains 10 videos
+2025-03-31T06:51:47.961Z [info]: [Scraper 0] >> Finished scrolling: 26 new videos were fetched
+2025-03-31T06:51:50.820Z [info]: [Scraper 1] New request detected: contains 10 videos
+2025-03-31T06:51:51.245Z [info]: [Scraper 1] >> Finished scrolling: 25 new videos were fetched
+2025-03-31T06:51:51.245Z [info]: >>> Finished fetching videos: 47 unique videos were fetched
+2025-03-31T06:51:53.172Z [info]: Data saved to S3: florin_2025-03-31T06-51-03-110Z.json
+2025-03-31T06:51:53.172Z [info]: Time taken: 0.8343166666666666 minutes
+2025-03-31T07:15:33.527Z [info]: >>> Server is up & listening on port 3000
+2025-03-31T07:15:56.161Z [info]: Received GET request for /scrape?videosNum=40&sentinalUser=florin&proxyRegion=IL with query params: {"videosNum":"40","sentinalUser":"florin","proxyRegion":"IL"}
+2025-03-31T07:15:56.163Z [info]: >>> Starting to fetch videos with the following parameters: videosNum: 40, sentinalUser: florin, proxyRegionCode: IL, concurrentBrowsers: 2
+2025-03-31T07:15:57.961Z [info]: [Scraper 1] Browser context created successfully with proxy user: customer-pariente_LdU3N-cc-IL
+2025-03-31T07:15:57.962Z [info]: [Scraper 0] Browser context created successfully with proxy user: customer-pariente_LdU3N-cc-IL
+2025-03-31T07:16:02.496Z [info]: [Scraper 1] >> Starting to scroll, max scrolls:200
+2025-03-31T07:16:03.055Z [info]: [Scraper 0] >> Starting to scroll, max scrolls:200
+2025-03-31T07:16:06.126Z [info]: [Scraper 1] New request detected: contains 6 videos
+2025-03-31T07:16:06.257Z [info]: [Scraper 1] 5 videos scrolled
+2025-03-31T07:16:07.899Z [info]: [Scraper 0] New request detected: contains 5 videos
+2025-03-31T07:16:08.822Z [info]: [Scraper 1] 10 videos scrolled
+2025-03-31T07:16:09.170Z [info]: [Scraper 0] 5 videos scrolled
+2025-03-31T07:16:11.003Z [info]: [Scraper 1] New request detected: contains 9 videos
+2025-03-31T07:16:12.881Z [info]: [Scraper 1] 15 videos scrolled
+2025-03-31T07:16:13.215Z [info]: [Scraper 0] New request detected: contains 11 videos
+2025-03-31T07:16:13.634Z [info]: [Scraper 0] 10 videos scrolled
+2025-03-31T07:16:15.286Z [info]: [Scraper 1] 20 videos scrolled
+2025-03-31T07:16:16.821Z [info]: [Scraper 0] 15 videos scrolled
+2025-03-31T07:16:18.339Z [info]: [Scraper 1] 25 videos scrolled
+2025-03-31T07:16:18.791Z [info]: [Scraper 0] 20 videos scrolled
+2025-03-31T07:16:20.088Z [info]: [Scraper 1] New request detected: contains 12 videos
+2025-03-31T07:16:20.905Z [info]: [Scraper 1] >> Finished scrolling: 27 new videos were fetched
+2025-03-31T07:16:21.843Z [info]: [Scraper 0] New request detected: contains 12 videos
+2025-03-31T07:16:22.665Z [info]: [Scraper 0] >> Finished scrolling: 28 new videos were fetched
+2025-03-31T07:16:22.667Z [info]: >>> Finished fetching videos: 54 unique videos were fetched
+2025-03-31T07:16:25.384Z [info]: Data saved to S3: florin_2025-03-31T07-15-56-161Z.json
+2025-03-31T07:16:25.384Z [info]: Time taken: 0.487 minutes
