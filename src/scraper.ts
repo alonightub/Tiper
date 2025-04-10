@@ -85,12 +85,6 @@ class TikTokBrowserScraper {
             const responseBody = await response.json();
             const itemList = responseBody.itemList;
             return itemList.filter((item: any) => !item.isAd && !item.liveRoomInfo);
-            // return itemList
-            //     .filter((item: any) => !item.isAd && !item.liveRoomInfo)
-            //     .map((item: any) => ({
-            //         videoId: item.id,
-            //         authorId: item.author.uniqueId
-            //     }));
         } catch (err) {
             this.log(`Error parsing the response: \n ${JSON.stringify((await response.json()).itemList)} \n\n ERROR:`, 'error', err);
             return [];
