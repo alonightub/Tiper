@@ -1,9 +1,11 @@
 .vscode/
+.DS_Store
+
 dist/
 node_modules/
-
-secrets/jerusalem
-secrets/umm-al-fahm
+secrets/
+data/*.json
+storageState.json
 test.js
 
 app.log

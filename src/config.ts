@@ -1,4 +1,3 @@
-import * as PROXY_CREDS from '../secrets/PROXY_SECRET.json';
 import * as winston from 'winston';
 
 export const CONFIG = {
@@ -10,11 +9,6 @@ export const CONFIG = {
     SECRETS_DIR: './secrets',
     COOKIES_STORAGE_STATE: 'florin',
     S3_BUCKET_NAME: 'testiper',
-    PROXY_DETAILS: {
-        server: PROXY_CREDS.server,
-        username: PROXY_CREDS.username,
-        password: PROXY_CREDS.password
-    },
 };
 
 export const logger = winston.createLogger({
@@ -28,3 +22,15 @@ export const logger = winston.createLogger({
         new winston.transports.File({ filename: 'app.log' })
     ]
 });
+
+export enum Environment {
+    LOCAL = 'local',
+    DEV = 'dev',    
+    PROD = 'prod',
+}
+
+export interface Proxy {
+    server: string;
+    username: string;
+    password: string;
+}
