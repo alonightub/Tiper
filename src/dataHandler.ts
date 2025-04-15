@@ -1,61 +1,102 @@
-import { writeFileSync } from 'fs';
+import { readFileSync, writeFileSync } from 'fs';
 import { CONFIG, logger } from './config';
 import { S3Client, PutObjectCommand, GetObjectCommand } from '@aws-sdk/client-s3';
 import { Readable } from 'stream';
 
-interface Video {
-    videoId: string;
-    authorId: string;
+const DATA_DIR = './data';
+const AWS_BUCKET_REGION = 'eu-north-1';
+
+const getDataHandler = (localStorage = false): DataHandler => {
+    if (localStorage) {
+        return new LocalStorage();
+    }
+    return new S3Storage();
 }
 
-class DataHandler {
-    private dataFilePath: string;
-    private s3Client: S3Client;
-    private bucketName: string;
-    public dataFileName: string;
+interface DataHandler {
+    saveData(data: any[], fileName: string): Promise<boolean>;
+    getData(fileName: string, formatted: boolean): Promise<any>;
+}
 
-    constructor(sentinalUser: string, dataDir: string = CONFIG.DATA_DIR) {
-        const dateTime = new Date().toISOString().replace(/[:.]/g, '-');
-        this.dataFileName = `${sentinalUser}_${dateTime}.json`;
-        this.dataFilePath = `${dataDir}/${this.dataFileName}`;
-        this.s3Client = new S3Client({ region: 'eu-north-1' });
-        this.bucketName = CONFIG.S3_BUCKET_NAME;
+class LocalStorage implements DataHandler {
+    private dataDir: string;
+
+    constructor(dataDir: string = DATA_DIR) {
+        this.dataDir = dataDir;
     }
 
-    public saveDataToFile(data: Video[]): void {
+    public async getData(fileName: string, formatted: boolean = false): Promise<any> {
+        const filePath = `${this.dataDir}/${fileName}`;
+        try {
+            const fileData = readFileSync(filePath, 'utf-8')
+            const data = JSON.parse(fileData);
+            if (formatted) {
+                return this.formatData(data);
+            }
+            return data;
+        } catch (error) {
+            if (error instanceof Error) {
+                logger.error(`Error reading file from local storage: ${error.message}`);
+            } else {
+                logger.error(`Error reading file from local storage: ${error}`);
+            }
+        }
+        return [];
+    }
+
+    public saveData(data: any[], fileName: string): Promise<boolean> {
         if (!data || data.length === 0) {
             logger.warn('No data to save.');
-            return;
         }
         try {
-            writeFileSync(this.dataFilePath, JSON.stringify(data));
-            logger.info(`Data saved to file: ${this.dataFilePath}`);
+            const filePath = `${this.dataDir}/${fileName}`;
+            writeFileSync(filePath, JSON.stringify(data));
+            logger.info(`Data saved to file: ${filePath}`);
+            return Promise.resolve(true);
         } catch (error) {
             logger.error('Error saving data to file:', error);
         }
+        return Promise.resolve(false);
     }
 
-    public async saveDataToBucket(data: Video[]): Promise<void> {
+    public formatData(data: any[]): string[] {
+        return data;
+    }
+}
+
+
+class S3Storage implements DataHandler {
+    private s3Client: S3Client;
+    private bucketName: string;
+
+    constructor() {
+        this.s3Client = new S3Client({ region: AWS_BUCKET_REGION });
+        this.bucketName = CONFIG.S3_BUCKET_NAME;
+    }
+
+    public async saveData(data: any[], fileName: string): Promise<boolean> {
         if (!data || data.length === 0) {
             logger.warn('No data to save.');
-            return;
+            return false;
         }
         try {
             const params = {
                 Bucket: this.bucketName,
-                Key: this.dataFileName,
+                Key: fileName,
                 Body: JSON.stringify(data),
                 ContentType: 'application/json',
             };
             const command = new PutObjectCommand(params);
             await this.s3Client.send(command);
-            logger.info(`Data saved to S3: ${this.dataFileName}`);
+            logger.info(`Data saved to S3: ${fileName}`);
+            return true;
         } catch (error) {
             logger.error('Error saving data to S3:', error);
         }
+        return false;
     }
 
-    public async getDataFromBucket(fileName: string, formatted: boolean): Promise<any> {
+    public async getData(fileName: string, formatted: boolean = false): Promise<any> {
         try {
             const params = {
                 Bucket: this.bucketName,
@@ -78,25 +119,27 @@ class DataHandler {
 
             const rawData = await streamToString(response.Body as Readable);
             const data = JSON.parse(rawData);
-
-            if (!formatted) {
-                return data;
+            if (formatted) {
+                return this.formatData(data);
             }
-
-            const formattedData = data.map((item: any) => {
-                const uniqueId = item.author.uniqueId;
-                return `https://www.tiktok.com/@${uniqueId}/video/${item.id}`;
-            });
-
-            return formattedData;
+            return data;
         } catch (error) {
             if (error instanceof Error) {
-                throw new Error(`Error retrieving file from S3: ${error.message}`);
+                logger.error(`Error retrieving file from S3: ${error.message}`);
             } else {
-                throw new Error('Error retrieving file from S3: Unknown error');
+                logger.error(`Error retrieving file from S3: ${error}`);
             }
         }
+        return [];
+    }
+
+    public formatData(data: any[]): string {
+        const urlsArr: string[] = data.map((item: any) => {
+            const uniqueId = item.author.uniqueId;
+            return `https://www.tiktok.com/@${uniqueId}/video/${item.id}`;
+        });
+        return urlsArr.join('\n');
     }
 }
 
-export { DataHandler, Video };
+export { DataHandler, LocalStorage, S3Storage, getDataHandler };

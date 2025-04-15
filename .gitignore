@@ -1,8 +1,10 @@
 .vscode/
+.DS_Store
+
 dist/
 node_modules/
-
 secrets/
+data/*.json
 storageState.json
 test.js
 

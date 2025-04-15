@@ -1,6 +1,5 @@
 import { chromium, firefox, BrowserContext, Page, Response } from 'playwright';
-import { CONFIG, logger } from './config';
-import { Video } from './dataHandler';
+import { CONFIG, logger, Proxy } from './config';
 
 class TikTokBrowserScraper {
     private static readonly TIKTOK_BASE_URL: string = 'https://www.tiktok.com';
@@ -10,22 +9,21 @@ class TikTokBrowserScraper {
     };
     private static readonly SCROLLING_SELECTOR_PATH: string = 'path[d="m24 27.76 13.17-13.17a1 1 0 0 1 1.42 0l2.82 2.82a1 1 0 0 1 0 1.42L25.06 35.18a1.5 1.5 0 0 1-2.12 0L6.59 18.83a1 1 0 0 1 0-1.42L9.4 14.6a1 1 0 0 1 1.42 0L24 27.76Z"]';
 
-    private newVideos: Video[] = [];
+    private newVideos: any[] = [];
     private ctx: BrowserContext | null = null;
     private page: Page | null = null;
     private index: number;
     private storageStatePath: string;
     private videosToFetch: number;
     private sentinalUser: string;
-    private proxyCreds: any;
+    private proxy: Proxy;
 
-    constructor(index: number, videosToFetch: number, sentinalUser: string, proxyRegionCode: string) {
+    constructor(index: number, videosToFetch: number, sentinalUser: string, proxy: Proxy) {
         this.sentinalUser = sentinalUser;
         this.videosToFetch = videosToFetch;
         this.index = index;
         this.storageStatePath = CONFIG.SECRETS_DIR + '/' + this.sentinalUser;
-        this.proxyCreds = CONFIG.PROXY_DETAILS;
-        this.proxyCreds.username = this.proxyCreds.username.slice(0, -2) + proxyRegionCode;
+        this.proxy = proxy;
     };
 
     private log(message: string, level: 'info' | 'error' = 'info', ...args: any[]) {
@@ -36,7 +34,7 @@ class TikTokBrowserScraper {
         }
     }
 
-    public async getForyouVideos(): Promise<Video[]> {
+    public async getForyouVideos(): Promise<any[]> {
         if (!this.ctx || !this.page) {
             await this.initFirefoxBrowser();
         }
@@ -80,7 +78,7 @@ class TikTokBrowserScraper {
         }
     }
 
-    private async parseItemsResponse(response: Response): Promise<Video[]> {
+    private async parseItemsResponse(response: Response): Promise<any[]> {
         try {
             const responseBody = await response.json();
             const itemList = responseBody.itemList;
@@ -100,12 +98,12 @@ class TikTokBrowserScraper {
             },
         });
         this.ctx = await browser.newContext({
-            proxy: CONFIG.PROXY_DETAILS,
+            proxy: this.proxy,
             storageState: this.storageStatePath,
             userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
             viewport: { width: 1280, height: 720 },
         });
-        this.log(`Browser context created successfully with proxy user: ${this.proxyCreds.username}`);
+        this.log(`Browser context created successfully with proxy user: ${this.proxy.username}`);
 
         this.page = await this.ctx.newPage();
         this.page.setDefaultTimeout(0);
